@@ -1,8 +1,17 @@
 module fregeclj.Fregeclj where
 
--- note that you need to run lein fregec
+{-- note that you need to run lein fregec
+     
+     Steps if you have clojure code that depends on frege that depends on clojure:
+     lein clean
+     Change Frege class to not depend on clojure.
+     lein fregec
+     lein repl (or some other command that compiles the clojure code)
+     Change Frege class
+     lein fregec
+--}
 
-{--
+
 data PersistentMap k v = native clojure.lang.IPersistentMap where
   pure native empty clojure.lang.PersistentHashMap.EMPTY :: PersistentMap k v
   pure native assoc :: PersistentMap k v -> k -> v -> PersistentMap k v
@@ -14,10 +23,10 @@ data PersistentMap k v = native clojure.lang.IPersistentMap where
     
 data DatabaseAccess = native com.fregeclj.DatabaseAccess where 
  pure native testme com.fregeclj.DatabaseAccess.testme :: Int -> Int
---}
+
         
                         
-testFrege :: Int -> IO ()
-testFrege x = println $ show x
---testFrege x =  println $ show $ DatabaseAccess.testme x     
+testFrege :: Int -> Int
+--testFrege x = x + 1
+testFrege x =  x + DatabaseAccess.testme x     
 

@@ -11,6 +11,6 @@
                  [org.clojure/tools.logging "0.2.3"]
                  [yesql "0.4.1"]]
   :plugins [[lein-fregec "3.22.524"]]
-  ;:aot :all
+  :aot :all
   :frege-source-paths ["src/frege"]
   )

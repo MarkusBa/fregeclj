@@ -4,7 +4,11 @@
             [clojure.java.jdbc :as jdbc]
             [clojure.string :as cljstr :refer [blank?]]
             [yesql.core :refer [defquery]])
-  (:import [fregeclj Fregeclj]))
+  (:import [fregeclj Fregeclj])
+  (:gen-class
+    :name com.fregeclj.DatabaseAccess
+    :methods [#^{:static true} [getitems [int] java.util.List]
+              #^{:static true} [testme [int] int]]))
 
 ;(ann db-spec Map)
 (def db-spec (cf/load-config "resources/config.clj"))
