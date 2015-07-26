@@ -5,7 +5,10 @@
             [clojure.string :as cljstr :refer [blank?]]
             [yesql.core :refer [defquery]])
   (:import (java.sql Timestamp)
-           (java.lang RuntimeException Boolean Double Integer String)))
+           (java.lang RuntimeException Boolean Double Integer String))
+  (:gen-class
+    :name com.fregeclj.DatabaseAccess
+    :methods [#^{:static true} [getitems [int] java.util.List]]))
 
 ;(ann db-spec Map)
 (def db-spec (cf/load-config "resources/config.clj"))
@@ -13,10 +16,13 @@
 ;(ann ^:no-check get-items-query [Map Integer -> List])
 (defquery get-items-query "sql/select.sql")
 
-;(ann get-items [String -> List])
+;(ann get-items [Integer -> List])
 (def get-items
   (fn [idplayer]
-    (get-items-query db-spec (Integer/parseInt idplayer))))
+    (get-items-query db-spec idplayer)))
+
+(defn -getitems [idplayer]
+  (get-items idplayer))
 
 ;(ann ^:no-check existing-amount [Map Integer String -> List])
 (defquery existing-amount "sql/existingamount.sql")
@@ -57,5 +63,10 @@
                                   (update-item! connection (- existingamount amount) sellsymbol idplayer)
                                   (delete-item! connection idplayer sellsymbol))))))
 
-
+(comment 
+  (require '[fregeclj.database :as db])
+  (db/get-items 1)
+  (import com.fregeclj.DatabaseAccess)
+  (DatabaseAccess/getitems 1)
+  )
 
