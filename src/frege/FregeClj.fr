@@ -1,4 +1,4 @@
 module FregeClj where
 
-testing = 1
+
 

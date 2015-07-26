@@ -8,7 +8,8 @@
            (java.lang RuntimeException Boolean Double Integer String))
   (:gen-class
     :name com.fregeclj.DatabaseAccess
-    :methods [#^{:static true} [getitems [int] java.util.List]]))
+    :methods [#^{:static true} [getitems [int] java.util.List]
+              #^{:static true} [getitemstest [int] java.util.List]]))
 
 ;(ann db-spec Map)
 (def db-spec (cf/load-config "resources/config.clj"))
@@ -23,6 +24,17 @@
 
 (defn -getitems [idplayer]
   (get-items idplayer))
+
+;(ann ^:no-check get-items-query [Map Integer -> List])
+(defquery get-items-test-query "sql/selecttest.sql")
+
+;(ann get-items [Integer -> List])
+(def get-items-test
+  (fn [idplayer]
+    (get-items-test-query db-spec idplayer)))
+
+(defn -getitemstest [idplayer]
+  (get-items-test idplayer))
 
 ;(ann ^:no-check existing-amount [Map Integer String -> List])
 (defquery existing-amount "sql/existingamount.sql")
