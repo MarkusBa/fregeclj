@@ -9,6 +9,13 @@ module fregeclj.Fregeclj where
      lein repl (or some other command that compiles the clojure code) like lein compile
      Change Frege class
      lein fregec
+     
+     Steps if you just call clojure
+     lein clean
+     lein compile
+     lein fregec
+     lein repl 
+     (import ...)
 --}
 
 
@@ -21,15 +28,27 @@ data PersistentMap k v = native clojure.lang.IPersistentMap where
   fromKVList xs = foldl addItem PersistentMap.empty xs where
     addItem m (k, v) = PersistentMap.assoc m k v
 
+{--
+data PersistentList v = native clojure.lang.IPersistentList where
+  pure native empty clojure.lang.PersistentList.EMPTY :: PersistentList v
+  pure native assoc :: PersistentMap k v -> k -> v -> PersistentMap k v
+  pure native valAt :: PersistentMap k v -> k -> v -> v
+
+  fromKVList :: [(k, v)] -> PersistentMap k v
+  fromKVList xs = foldl addItem PersistentMap.empty xs where
+    addItem m (k, v) = PersistentMap.assoc m k v
+--}
+
 data Keyword = native clojure.lang.Keyword    
 
                        
-data DatabaseAccess = native com.fregeclj.DatabaseAccess where 
- pure native testkeyword com.fregeclj.DatabaseAccess.testkeyword :: Int -> Keyword
- --native getitems com.fregeclj.DatabaseAccess.testme :: Int -> IO List PersistentMap 
+data DatabaseAccess = native com.fregeclj.DatabaseAccess where
+  pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> Object 
+ -- pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> [PersistentMap Keyword Object]
+ --pure native testkeyword com.fregeclj.DatabaseAccess.testkeyword :: Int -> Keyword 
         
                         
-testFrege ::  Keyword
+--testFrege ::  [PersistentMap Keyword Object]
 --testFrege x = x + 1
-testFrege =  DatabaseAccess.testkeyword 1    
+testFrege =  DatabaseAccess.getitems 1    
 
