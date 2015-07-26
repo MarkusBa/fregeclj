@@ -4,11 +4,11 @@
             [clojure.java.jdbc :as jdbc]
             [clojure.string :as cljstr :refer [blank?]]
             [yesql.core :refer [defquery]])
-  (:import [fregeclj Fregeclj])
+  ;(:import [fregeclj Fregeclj])
   (:gen-class
     :name com.fregeclj.DatabaseAccess
     :methods [#^{:static true} [getitems [int] java.util.List]
-              #^{:static true} [testme [int] int]]))
+              #^{:static true} [testkeyword [int] clojure.lang.Keyword]]))
 
 ;(ann db-spec Map)
 (def db-spec (cf/load-config "resources/config.clj"))
@@ -24,11 +24,11 @@
 (defn -getitems [idplayer]
   (get-items idplayer))
 
-(defn -testme [i]
-  (+ i 1))
+;(defn testFrege []
+;  (Fregeclj/testFrege (int 42)))
 
-(defn testFrege []
-  (Fregeclj/testFrege (int 42)))
+(defn -testkeyword [x]
+  (identity :max))
 
 ;(ann ^:no-check existing-amount [Map Integer String -> List])
 (defquery existing-amount "sql/existingamount.sql")
@@ -74,6 +74,8 @@
   (db/get-items 1)
   (import com.fregeclj.DatabaseAccess)
   (DatabaseAccess/getitems 1)
+  (import fregeclj.Fregeclj)
+  (Fregeclj/testFrege)
   )
 
 (comment
