@@ -4,13 +4,7 @@
             [clojure.java.jdbc :as jdbc]
             [clojure.string :as cljstr :refer [blank?]]
             [yesql.core :refer [defquery]])
-  (:import (java.sql Timestamp)
-           [fregeclj Fregeclj]
-           (java.lang RuntimeException Boolean Double Integer String))
-  (:gen-class
-    :name com.fregeclj.DatabaseAccess
-    :methods [#^{:static true} [getitems [int] java.util.List]
-              #^{:static true} [testme [int] int]]))
+  (:import [fregeclj Fregeclj]))
 
 ;(ann db-spec Map)
 (def db-spec (cf/load-config "resources/config.clj"))
@@ -30,7 +24,7 @@
   (+ i 1))
 
 (defn testFrege []
-  (Fregeclj/testFrege 42))
+  (Fregeclj/testFrege (int 42)))
 
 ;(ann ^:no-check existing-amount [Map Integer String -> List])
 (defquery existing-amount "sql/existingamount.sql")
@@ -77,4 +71,10 @@
   (import com.fregeclj.DatabaseAccess)
   (DatabaseAccess/getitems 1)
   )
+
+(comment
+  (:gen-class
+    :name com.fregeclj.DatabaseAccess
+    :methods [#^{:static true} [getitems [int] java.util.List]
+              #^{:static true} [testme [int] int]]))
 

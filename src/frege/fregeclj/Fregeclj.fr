@@ -1,5 +1,7 @@
 module fregeclj.Fregeclj where
 
+-- note that you need to run lein fregec
+
 {--
 data PersistentMap k v = native clojure.lang.IPersistentMap where
   pure native empty clojure.lang.PersistentHashMap.EMPTY :: PersistentMap k v
@@ -15,7 +17,7 @@ data DatabaseAccess = native com.fregeclj.DatabaseAccess where
 --}
         
                         
-testFrege :: Int -> Int
+testFrege :: Int -> IO ()
 testFrege x = println $ show x
 --testFrege x =  println $ show $ DatabaseAccess.testme x     
 
