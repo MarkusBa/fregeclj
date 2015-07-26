@@ -1,0 +1,21 @@
+module fregeclj.Fregeclj where
+
+{--
+data PersistentMap k v = native clojure.lang.IPersistentMap where
+  pure native empty clojure.lang.PersistentHashMap.EMPTY :: PersistentMap k v
+  pure native assoc :: PersistentMap k v -> k -> v -> PersistentMap k v
+  pure native valAt :: PersistentMap k v -> k -> v -> v
+
+  fromKVList :: [(k, v)] -> PersistentMap k v
+  fromKVList xs = foldl addItem PersistentMap.empty xs where
+    addItem m (k, v) = PersistentMap.assoc m k v
+    
+data DatabaseAccess = native com.fregeclj.DatabaseAccess where 
+ pure native testme com.fregeclj.DatabaseAccess.testme :: Int -> Int
+--}
+        
+                        
+testFrege :: Int -> Int
+testFrege x = println $ show x
+--testFrege x =  println $ show $ DatabaseAccess.testme x     
+

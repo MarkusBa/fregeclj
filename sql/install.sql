@@ -12,7 +12,7 @@ CREATE TABLE item (
   symbol varchar(255)  NOT NULL,
   amount NUMERIC,
   price NUMERIC,
-  idplayer SERIAL references player (id) ON DELETE CASCADE,
+  id_player SERIAL references player (id) ON DELETE CASCADE,
   ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -20,6 +20,6 @@ CREATE INDEX ts_idx ON item (ts);
 
 -- Inserts
 insert into player (name, email) values ('test', 'test@test.com');
-insert into item (symbol, amount, price, idplayer, ts) values ('CASH', 10000, 1, 1, now());
-insert into item (symbol, amount, price, idplayer, ts) values ('PAH3.DE', 0, 0, 1, now());
+insert into item (symbol, amount, price, id_player, ts) values ('CASH', 10000, 1, 1, now());
+insert into item (symbol, amount, price, id_player, ts) values ('PAH3.DE', 0, 0, 1, now());
 
