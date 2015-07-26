@@ -28,6 +28,9 @@ data PersistentMap k v = native clojure.lang.IPersistentMap where
   fromKVList xs = foldl addItem PersistentMap.empty xs where
     addItem m (k, v) = PersistentMap.assoc m k v
 
+data List v = native java.util.List
+  --pure native get :: List v -> v 
+
 data LazySeq v = native clojure.lang.LazySeq
 
 data PersistentList v = native clojure.lang.IPersistentList 
@@ -38,7 +41,7 @@ data PersistentList v = native clojure.lang.IPersistentList
 data Keyword = native clojure.lang.Keyword    
 
 data DatabaseAccess = native com.fregeclj.DatabaseAccess where
-  pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> LazySeq (PersistentMap Keyword Object) 
+  pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> List (PersistentMap Keyword Object) 
  -- pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> [PersistentMap Keyword Object]
  --pure native testkeyword com.fregeclj.DatabaseAccess.testkeyword :: Int -> Keyword 
         
