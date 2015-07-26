@@ -19,6 +19,38 @@ module fregeclj.Fregeclj where
 --}
 
 
+
+data List e = native java.util.List where
+
+  native add :: Mutable s (List e) -> e -> ST s Bool
+              | Mutable s (List e) -> Int -> e -> ST s ()
+
+  native clear :: Mutable s (List e) -> ST s ()
+
+  native contains :: Mutable s (List e) -> Object -> ST s Bool
+
+  native equals :: Mutable s (List e) -> Object -> ST s Bool
+
+  native get :: Mutable s (List e) -> Int -> ST s e
+
+  native hashCode :: Mutable s (List e) -> ST s Int
+
+  native indexOf :: Mutable s (List e) -> Object -> ST s Int
+
+  native isEmpty :: Mutable s (List e) -> ST s Bool
+
+  native lastIndexOf :: Mutable s (List e) -> Object -> ST s Int
+
+  native remove :: Mutable s (List e) -> Object -> ST s Bool
+                 | Mutable s (List e) -> Int -> ST s e
+
+  native set :: Mutable s (List e) -> Int -> e -> ST s e
+
+  native size :: Mutable s (List e) -> ST s Int
+
+  native subList :: Mutable s (List e) -> Int -> Int -> STMutable s (List e)
+
+
 data PersistentMap k v = native clojure.lang.IPersistentMap where
   pure native empty clojure.lang.PersistentHashMap.EMPTY :: PersistentMap k v
   pure native assoc :: PersistentMap k v -> k -> v -> PersistentMap k v
@@ -27,9 +59,6 @@ data PersistentMap k v = native clojure.lang.IPersistentMap where
   fromKVList :: [(k, v)] -> PersistentMap k v
   fromKVList xs = foldl addItem PersistentMap.empty xs where
     addItem m (k, v) = PersistentMap.assoc m k v
-
-data List v = native java.util.List
-  --pure native get :: List v -> v 
 
 data LazySeq v = native clojure.lang.LazySeq
 
