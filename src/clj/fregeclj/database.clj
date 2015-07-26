@@ -7,7 +7,7 @@
   ;(:import [fregeclj Fregeclj])
   (:gen-class
     :name com.fregeclj.DatabaseAccess
-    :methods [#^{:static true} [getitems [int] java.util.List]
+    :methods [#^{:static true} [getitems [int] clojure.lang.LazySeq]
               #^{:static true} [testkeyword [int] clojure.lang.Keyword]]))
 
 ;(ann db-spec Map)
