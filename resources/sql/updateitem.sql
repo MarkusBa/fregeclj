@@ -1,2 +1,2 @@
 UPDATE item SET amount = :amount
-WHERE symbol = :symbol AND idplayer = :idplayer
+WHERE symbol = :symbol AND id_player = :idplayer

@@ -1,2 +1,2 @@
-INSERT INTO item (symbol, amount, price, idplayer, ts)
+INSERT INTO item (symbol, amount, price, id_player, ts)
 VALUES (:symbol, :amount, :price, :idplayer, :ts)

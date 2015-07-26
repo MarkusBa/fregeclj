@@ -1,2 +1,2 @@
 DELETE FROM item
-WHERE idplayer = :idplayer AND symbol = :symbol
+WHERE id_player = :idplayer AND symbol = :symbol
