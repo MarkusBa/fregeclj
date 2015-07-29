@@ -70,12 +70,15 @@ data PersistentList v = native clojure.lang.IPersistentList
 data Keyword = native clojure.lang.Keyword    
 
 data DatabaseAccess = native com.fregeclj.DatabaseAccess where
-  pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> List (PersistentMap Keyword Object) 
- -- pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> [PersistentMap Keyword Object]
- --pure native testkeyword com.fregeclj.DatabaseAccess.testkeyword :: Int -> Keyword 
+  pure native testhigher com.fregeclj.DatabaseAccess.testhigher :: (Int -> Int) -> Int
+  {-- pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> List (PersistentMap Keyword Object) 
+   pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> [PersistentMap Keyword Object]
+   pure native testkeyword com.fregeclj.DatabaseAccess.testkeyword :: Int -> Keyword
+   --} 
         
-                        
+increment x = x + 1
+                                               
 --testFrege ::  [PersistentMap Keyword Object]
 --testFrege x = x + 1
-testFrege =  DatabaseAccess.getitems 1    
-
+--testFrege =  DatabaseAccess.getitems 1    
+testFrege = DatabaseAccess.testhigher increment

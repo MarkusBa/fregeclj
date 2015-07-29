@@ -7,7 +7,8 @@
   ;(:import [fregeclj Fregeclj])
   (:gen-class
     :name com.fregeclj.DatabaseAccess
-    :methods [#^{:static true} [getitems [int] clojure.lang.LazySeq]
+    :methods [#^{:static true} [testhigher [java.lang.Object] int]
+              #^{:static true} [getitems [int] clojure.lang.LazySeq]
               #^{:static true} [testkeyword [int] clojure.lang.Keyword]]))
 
 ;(ann db-spec Map)
@@ -29,6 +30,13 @@
 
 (defn -testkeyword [x]
   (identity :max))
+
+(defn -testhigher [x]
+  (do
+    (prn (type x))
+    (.eval x (int 42))
+    ))
+
 
 ;(ann ^:no-check existing-amount [Map Integer String -> List])
 (defquery existing-amount "sql/existingamount.sql")
