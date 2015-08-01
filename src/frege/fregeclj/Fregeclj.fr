@@ -1,6 +1,6 @@
 module fregeclj.Fregeclj where
 
---import frege.control.trans.MonadIO (liftIO)
+--import frege.control.trans.MonadIO 
 
 {-- Idea: Frege sits on top!
      
@@ -105,7 +105,7 @@ maybeShow y = case y of
 --testExistingAmount :: Long -> String -> Maybe Long
 --testExistingAmount :: Long -> String -> IO (Maybe String)
 testExistingAmount :: Long -> String -> String
-testExistingAmount idplayer symbol = maybeShow $ DatabaseAccess.wrapintransaction $ DatabaseAccess.existingamount idplayer symbol
+testExistingAmount idplayer symbol = show <$> DatabaseAccess.wrapintransaction $ DatabaseAccess.existingamount idplayer symbol
                                                
 
                               
