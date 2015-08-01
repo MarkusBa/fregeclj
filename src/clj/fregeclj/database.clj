@@ -7,9 +7,12 @@
   ;(:import [fregeclj Fregeclj])
   (:gen-class
     :name com.fregeclj.DatabaseAccess
-    :methods [#^{:static true} [testhigher [java.lang.Object] int]
-              #^{:static true} [getitems [int] clojure.lang.LazySeq]
-              #^{:static true} [testkeyword [int] clojure.lang.Keyword]]))
+    :methods [#^{:static true} [existingamount [long String Object] Long]
+              #^{:static true} [updateitem [long String long Object] Integer]
+              #^{:static true} [insertitem [String long double long java.sql.Timestamp Object] Integer]
+              #^{:static true} [deleteitem [long String Object] Integer]
+              #^{:static true} [wrapintransaction [frege.runtime.Lambda] Object]
+              #^{:static true} [getitems [long] clojure.lang.LazySeq]]))
 
 ;(ann db-spec Map)
 (def db-spec (cf/load-config "resources/config.clj"))
@@ -18,37 +21,39 @@
 (defquery get-items-query "sql/select.sql")
 
 ;(ann get-items [Integer -> List])
-(def get-items
-  (fn [idplayer]
-    (get-items-query db-spec idplayer)))
+(defn get-items [idplayer]
+    (get-items-query db-spec idplayer))
 
 (defn -getitems [idplayer]
   (get-items idplayer))
 
-;(defn testFrege []
-;  (Fregeclj/testFrege (int 42)))
-
-(defn -testkeyword [x]
-  (identity :max))
-
-(defn -testhigher [x]
-  (do
-    (prn (type x))
-    (.eval x (int 42))
-    ))
-
-
 ;(ann ^:no-check existing-amount [Map Integer String -> List])
 (defquery existing-amount "sql/existingamount.sql")
+
+(defn -existingamount [idplayer symbol connection]
+  (:amount (first (existing-amount connection idplayer symbol))))
 
 ;(ann ^:no-check update-item! [Map Double String Integer -> Integer])
 (defquery update-item! "sql/updateitem.sql")
 
+(defn -updateitem [amount symbol idplayer connection]
+  (update-item! connection amount symbol idplayer))
+
 ;(ann ^:no-check insert-item! [Map String Double Double Integer java.sql.Timestamp -> Integer])
 (defquery insert-item! "sql/insertitem.sql")
 
+(defn -insertitem [symbol amount price idplayer timestamp connection]
+  (insert-item! connection symbol amount price idplayer timestamp))
+
 ;(ann ^:no-check delete-item! [Map Integer String -> Integer])
 (defquery delete-item! "sql/deleteitem.sql")
+
+(defn -deleteitem [idplayer symbol connection]
+  (insert-item! connection idplayer symbol))
+
+(defn -wrapintransaction [frege-lambda]
+  (jdbc/with-db-transaction [connection db-spec]
+      (.eval frege-lambda connection)))
 
 ;; (db/order "YHOO" 2 44.52 "1") -> 1
 ;(ann ^:no-check order [String Double Double String -> Integer])
