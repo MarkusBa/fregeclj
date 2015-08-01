@@ -1,5 +1,7 @@
 module fregeclj.Fregeclj where
 
+--import frege.control.trans.MonadIO (liftIO)
+
 {-- Idea: Frege sits on top!
      
      Steps if you have clojure code that depends on frege that depends on clojure:
@@ -76,7 +78,10 @@ data Keyword = native clojure.lang.Keyword
               #^{:static true} [deleteitem [long String Object] Integer]
               #^{:static true} [wrapintransaction [frege.runtime.Fun1] Object]
               #^{:static true} [getitems [long] clojure.lang.LazySeq]
- --}             
+ --}     
+ 
+ -- TODO Stop lying about the methods being pure
+                 
 data DatabaseAccess = native com.fregeclj.DatabaseAccess where
   pure native getitems com.fregeclj.DatabaseAccess.getitems :: Long -> List (PersistentMap Keyword Object)
   pure native wrapintransaction com.fregeclj.DatabaseAccess.wrapintransaction :: (Object -> a) -> a
@@ -85,10 +90,22 @@ data DatabaseAccess = native com.fregeclj.DatabaseAccess where
    pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> [PersistentMap Keyword Object]
    pure native testkeyword com.fregeclj.DatabaseAccess.testkeyword :: Int -> Keyword
    --} 
-        
-testExistingAmount :: Long -> String -> Maybe Long
-testExistingAmount idplayer symbol = DatabaseAccess.wrapintransaction $ DatabaseAccess.existingamount idplayer symbol
+
+maybePrint :: Show a => Maybe a -> IO ()
+maybePrint y =  case y of 
+                              Nothing -> return ()
+                              Just x     = println x        
+
+maybeShow :: Show a => Maybe a -> String
+maybeShow y = case y of 
+                              Nothing -> ""
+                              Just x     = show x        
+                        
+                                                                        
+--testExistingAmount :: Long -> String -> Maybe Long
+--testExistingAmount :: Long -> String -> IO (Maybe String)
+testExistingAmount :: Long -> String -> String
+testExistingAmount idplayer symbol = maybeShow $ DatabaseAccess.wrapintransaction $ DatabaseAccess.existingamount idplayer symbol
                                                
---testFrege ::  [PersistentMap Keyword Object]
---testFrege x = x + 1
---testFrege =  DatabaseAccess.getitems 1    
+
+                              
