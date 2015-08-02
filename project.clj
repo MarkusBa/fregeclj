@@ -5,7 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :source-paths ["src/clj"]
   :main fregeclj.FregeClj
-  :dependencies [[org.clojure/clojure "1.6.0"]
+  :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.frege-lang/frege "3.22.524-gcc99d7e"]
                  ;[org.frege-lang/frege-interpreter-core "1.1.1"]
                  ;[org.frege-lang/frege-interpreter-distribution "1.1.1"]
