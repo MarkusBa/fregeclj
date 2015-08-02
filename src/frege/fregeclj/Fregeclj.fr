@@ -63,7 +63,7 @@ data Keyword = native clojure.lang.Keyword
 {--
    #^{:static true} [existingamount [long String Object] Long]
               #^{:static true} [updateitem [long String long Object] Integer]
-              #^{:static true} [insertitem [String long double long java.sql.Timestamp Object] Integer]
+              #^{:static true} [insertitem [String long double long  Object] Integer]
               #^{:static true} [deleteitem [long String Object] Integer]
               #^{:static true} [wrapintransaction [frege.runtime.Fun1] Object]
               #^{:static true} [getitems [long] clojure.lang.LazySeq]
@@ -74,12 +74,12 @@ data Keyword = native clojure.lang.Keyword
 data DatabaseAccess = native com.fregeclj.DatabaseAccess where
   pure native getitems com.fregeclj.DatabaseAccess.getitems :: Long -> List (PersistentMap Keyword Object)
   native wrapintransaction com.fregeclj.DatabaseAccess.wrapintransaction :: (Object -> a) -> IO (a)
+  -- existingamount [idplayer symbol connection]
   pure native existingamount com.fregeclj.DatabaseAccess.existingamount ::  Long -> String -> Object -> Maybe Long
+  --updateitem [amount symbol idplayer connection]
   native updateitem com.fregeclj.DatabaseAccess.updateitem ::  Long -> String -> Long -> Object -> IO ()  --connection and BigInteger actually
-  {-- pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> List (PersistentMap Keyword Object) 
-   pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> [PersistentMap Keyword Object]
-   pure native testkeyword com.fregeclj.DatabaseAccess.testkeyword :: Int -> Keyword
-   --} 
+  --insertitem [symbol amount price idplayer connection]
+  native insertitem com.fregeclj.DatabaseAccess.insertitem ::  String -> Long -> Double -> Long -> Object -> IO ()  --connection and BigInteger actually
 
 maybePrint :: Show a => Maybe a -> IO ()
 maybePrint y =  case y of 
@@ -106,6 +106,7 @@ main = do
                success <- DatabaseAccess.wrapintransaction $ DatabaseAccess.updateitem 10000 "CASH" 1
                -- something needs to be done with the result or it is never evaluated if we declare it as a pure function!
                -- println success
+               asdf <- DatabaseAccess.wrapintransaction $ DatabaseAccess.insertitem "BLUP" 42 3.14 1 
                z <- testExistingAmount 1 "CASH"  
                println z
                

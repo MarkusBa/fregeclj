@@ -8,8 +8,8 @@
   (:gen-class
     :name com.fregeclj.DatabaseAccess
     :methods [#^{:static true} [existingamount [long String Object] Long]
-              #^{:static true} [updateitem [long String long Object] void] ;; java.math.BigInteger?
-              #^{:static true} [insertitem [String long double long java.sql.Timestamp Object] Integer]
+              #^{:static true} [updateitem [long String long Object] void] ;; java.math.BigInteger actually
+              #^{:static true} [insertitem [String long double long Object] void]
               #^{:static true} [deleteitem [long String Object] Integer]
               #^{:static true} [wrapintransaction [frege.runtime.Lambda] Object]
               #^{:static true} [getitems [long] clojure.lang.LazySeq]]))
@@ -42,8 +42,8 @@
 ;(ann ^:no-check insert-item! [Map String Double Double Integer java.sql.Timestamp -> Integer])
 (defquery insert-item! "sql/insertitem.sql")
 
-(defn -insertitem [symbol amount price idplayer timestamp connection]
-  (insert-item! connection symbol amount price idplayer timestamp))
+(defn -insertitem [symbol amount price idplayer connection]
+  (insert-item! connection symbol amount price idplayer (java.sql.Timestamp. (System/currentTimeMillis))))
 
 ;(ann ^:no-check delete-item! [Map Integer String -> Integer])
 (defquery delete-item! "sql/deleteitem.sql")
