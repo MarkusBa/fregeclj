@@ -115,16 +115,15 @@ order symbol amount price idPlayer connection = do
              if (fromIntegral money) >= costs
                 then do
                   let deduction = DatabaseAccess.updateitem (round $ ((fromIntegral money) - costs)) "CASH" idPlayer connection
-                  println deduction
                   let stock = DatabaseAccess.existingamount idPlayer symbol connection
                   case stock of
                        Just amountOfStock -> do
                          let newAmount = amount + amountOfStock    
                          let success = DatabaseAccess.updateitem newAmount symbol idPlayer connection
-                         println success
+                         println $ deduction ++ success
                        Nothing -> do
                          let success = DatabaseAccess.insertitem symbol amount price idPlayer connection
-                         println success
+                         println $ deduction ++ success
                          return ()
                 else return ()
            Nothing -> do
