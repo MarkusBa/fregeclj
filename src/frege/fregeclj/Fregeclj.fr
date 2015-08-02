@@ -77,9 +77,9 @@ data DatabaseAccess = native com.fregeclj.DatabaseAccess where
   -- existingamount [idplayer symbol connection]
   pure native existingamount com.fregeclj.DatabaseAccess.existingamount ::  Long -> String -> Object -> Maybe Long
   --updateitem [amount symbol idplayer connection]
-  native updateitem com.fregeclj.DatabaseAccess.updateitem ::  Long -> String -> Long -> Object -> IO ()  --connection and BigInteger actually
+  pure native updateitem com.fregeclj.DatabaseAccess.updateitem ::  Long -> String -> Long -> Object -> String  --connection and BigInteger actually
   --insertitem [symbol amount price idplayer connection]
-  native insertitem com.fregeclj.DatabaseAccess.insertitem ::  String -> Long -> Double -> Long -> Object -> IO ()  --connection and BigInteger actually
+  pure native insertitem com.fregeclj.DatabaseAccess.insertitem ::  String -> Long -> Double -> Long -> Object -> String  --connection and BigInteger actually
 
 maybePrint :: Show a => Maybe a -> IO ()
 maybePrint y =  case y of 
@@ -101,12 +101,32 @@ testExistingAmount idplayer symbol = do
                                                                    res <- maybeShow $ DatabaseAccess.wrapintransaction $ DatabaseAccess.existingamount idplayer symbol
                                                                    return res
 
-                                                                                              
+runInTransaction connection = do 
+                                                          let success =  DatabaseAccess.updateitem 30000 "CASH" 1 connection
+                                                          println success                                                  
+                                                          let success2 = DatabaseAccess.insertitem "BLUP" 42 3.14 1 connection
+                                                          println success2
+
+{--
+runInTransaction connection = do 
+                                                          let success =  DatabaseAccess.updateitem 20000 "CASH" 1 connection
+                                                          println success                                                  
+                                                          --success >>= \x -> println x
+
+
+runInTransaction connection = do 
+                                                          success <-  DatabaseAccess.updateitem 20000 "CASH" 1 connection
+                                                          println success                                                   
+                                                          --success >>= \x -> println x
+--}
+                                                                                                                                  
 main = do
-               success <- DatabaseAccess.wrapintransaction $ DatabaseAccess.updateitem 10000 "CASH" 1
+               success <- DatabaseAccess.wrapintransaction $ runInTransaction
+               
                -- something needs to be done with the result or it is never evaluated if we declare it as a pure function!
                -- println success
-               asdf <- DatabaseAccess.wrapintransaction $ DatabaseAccess.insertitem "BLUP" 42 3.14 1 
+               --asdf <- DatabaseAccess.wrapintransaction $ DatabaseAccess.insertitem "BLUP" 42 3.14 1
+               --println asdf 
                z <- testExistingAmount 1 "CASH"  
                println z
                
