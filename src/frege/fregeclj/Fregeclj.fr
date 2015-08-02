@@ -43,7 +43,7 @@ data PersistentMap k v = native clojure.lang.IPersistentMap where
   pure native valAt :: PersistentMap k v -> k -> v -> v
 
   fromKVList :: [(k, v)] -> PersistentMap k v
-  fromKVList xs = foldl addItem PersistentMap.empty xs where
+  fromKVList xs = fold addItem PersistentMap.empty xs where
     addItem m (k, v) = PersistentMap.assoc m k v
 
 data LazySeq v = native clojure.lang.LazySeq
@@ -68,7 +68,7 @@ data Keyword = native clojure.lang.Keyword
                  
 data DatabaseAccess = native com.fregeclj.DatabaseAccess where
   pure native getitems com.fregeclj.DatabaseAccess.getitems :: Long -> List (PersistentMap Keyword Object)
-  pure native wrapintransaction com.fregeclj.DatabaseAccess.wrapintransaction :: (Object -> a) -> a
+  native wrapintransaction com.fregeclj.DatabaseAccess.wrapintransaction :: (Object -> a) -> IO (a)
   pure native existingamount com.fregeclj.DatabaseAccess.existingamount ::  Long -> String -> Object -> Maybe Long
   {-- pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> List (PersistentMap Keyword Object) 
    pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> [PersistentMap Keyword Object]
@@ -80,16 +80,20 @@ maybePrint y =  case y of
                               Nothing -> return ()
                               Just x     = println x        
 
-maybeShow :: Show a => Maybe a -> String
-maybeShow y = case y of 
-                              Nothing -> ""
-                              Just x     = show x        
+maybeShow :: Show a => IO (Maybe a) -> IO (String)
+maybeShow y = do
+                                z <- y
+                                case z of 
+                                   Nothing -> return ""
+                                   Just x     = return $ show x        
                         
                                                                         
 --testExistingAmount :: Long -> String -> Maybe Long
 --testExistingAmount :: Long -> String -> IO (Maybe String)
-testExistingAmount :: Long -> String -> String
-testExistingAmount idplayer symbol = show <$> DatabaseAccess.wrapintransaction $ DatabaseAccess.existingamount idplayer symbol
+testExistingAmount :: Long -> String -> IO (String)
+testExistingAmount idplayer symbol = maybeShow $ DatabaseAccess.wrapintransaction $ DatabaseAccess.existingamount idplayer symbol
                                                
-main = println $ testExistingAmount 1 "CASH"
+main = do
+               z <- testExistingAmount 1 "CASH"  
+               println z
                               
