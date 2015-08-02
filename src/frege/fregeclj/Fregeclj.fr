@@ -102,10 +102,11 @@ testExistingAmount idplayer symbol = do
                                                                    return res
 
 runInTransaction connection = do 
-                                                          let success =  DatabaseAccess.updateitem 30000 "CASH" 1 connection
-                                                          println success                                                  
-                                                          let success2 = DatabaseAccess.insertitem "BLUP" 42 3.14 1 connection
-                                                          println success2
+                                                          --let success =  DatabaseAccess.updateitem 30000 "CASH" 1 connection
+                                                          --println success                                                  
+                                                          --let success2 = DatabaseAccess.insertitem "BLUP" 42 3.14 1 connection
+                                                          --println success2
+                                                          println $ DatabaseAccess.updateitem 40000 "CASH" 1 connection ++ DatabaseAccess.insertitem "BLIP" 42 3.14 1 connection
 
 {--
 runInTransaction connection = do 
