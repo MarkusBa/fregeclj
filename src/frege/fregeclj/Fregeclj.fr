@@ -1,6 +1,7 @@
 module fregeclj.Fregeclj where
 
 import frege.control.monad.trans.MonadIO
+import frege.prelude.Math
 
 {-- Idea: Frege sits on top!
      
@@ -105,6 +106,34 @@ testExistingAmount idplayer symbol = do
                                                                    res <- maybeShow $ DatabaseAccess.wrapintransaction $ DatabaseAccess.existingamount idplayer symbol
                                                                    return res
 
+order :: String -> Long ->Double -> Long -> Object -> IO ()
+order symbol amount price idPlayer connection = do 
+      let costs = price * fromIntegral amount 
+      let cash = DatabaseAccess.existingamount idPlayer "CASH" connection
+      case cash of
+           Just money -> do
+             if (fromIntegral money) >= costs
+                then do
+                  let deduction = DatabaseAccess.updateitem (round $ ((fromIntegral money) - costs)) "CASH" idPlayer connection
+                  println deduction
+                  let stock = DatabaseAccess.existingamount idPlayer symbol connection
+                  case stock of
+                       Just amountOfStock -> do
+                         let newAmount = amount + amountOfStock    
+                         let success = DatabaseAccess.updateitem newAmount symbol idPlayer connection
+                         println success
+                       Nothing -> do
+                         let success = DatabaseAccess.insertitem symbol amount price idPlayer connection
+                         println success
+                         return ()
+                else return ()
+           Nothing -> do
+             println "No cash found"
+             return ()
+
+
+{--
+
 runInTransaction connection = do 
                                                           --let success =  DatabaseAccess.updateitem 30000 "CASH" 1 connection
                                                           --println success                                                  
@@ -112,7 +141,7 @@ runInTransaction connection = do
                                                           --println success2
                                                           println $ DatabaseAccess.updateitem 40000 "CASH" 1 connection ++ (DatabaseAccess.insertitem "BLEP" 42 3.14 1 connection) ++ DatabaseAccess.deleteitem 1 "BLUP" connection
 
-{--
+
 runInTransaction connection = do 
                                                           let success =  DatabaseAccess.updateitem 20000 "CASH" 1 connection
                                                           println success                                                  
@@ -126,7 +155,7 @@ runInTransaction connection = do
 --}
                                                                                                                                   
 main = do
-               success <- DatabaseAccess.wrapintransaction $ runInTransaction
+               success <- DatabaseAccess.wrapintransaction $ order "TESTI" 3 2.0 1
                
                -- something needs to be done with the result or it is never evaluated if we declare it as a pure function!
                -- println success
