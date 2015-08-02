@@ -77,11 +77,11 @@ data DatabaseAccess = native com.fregeclj.DatabaseAccess where
   -- existingamount [idplayer symbol connection]
   pure native existingamount com.fregeclj.DatabaseAccess.existingamount ::  Long -> String -> Object -> Maybe Long
   --updateitem [amount symbol idplayer connection]
-  pure native updateitem com.fregeclj.DatabaseAccess.updateitem ::  Long -> String -> Long -> Object -> String  --connection and BigInteger actually
+  native updateitem com.fregeclj.DatabaseAccess.updateitem ::  Long -> String -> Long -> Object -> IO (String)  --connection and BigInteger actually
   --insertitem [symbol amount price idplayer connection]
-  pure native insertitem com.fregeclj.DatabaseAccess.insertitem ::  String -> Long -> Double -> Long -> Object -> String  --connection and BigInteger actually
+  native insertitem com.fregeclj.DatabaseAccess.insertitem ::  String -> Long -> Double -> Long -> Object -> IO (String)  --connection and BigInteger actually
   --deleteitem [idplayer symbol connection]
-  pure native deleteitem com.fregeclj.DatabaseAccess.deleteitem ::  Long -> String -> Object -> String  --connection and BigInteger actually
+  native deleteitem com.fregeclj.DatabaseAccess.deleteitem ::  Long -> String -> Object -> IO (String)  --connection and BigInteger actually
 
 
 maybePrint :: Show a => Maybe a -> IO ()
@@ -109,7 +109,13 @@ runInTransaction connection = do
                                                           --println success                                                  
                                                           --let success2 = DatabaseAccess.insertitem "BLUP" 42 3.14 1 connection
                                                           --println success2
-                                                          println $ DatabaseAccess.updateitem 40000 "CASH" 1 connection ++ (DatabaseAccess.insertitem "BLEP" 42 3.14 1 connection) ++ DatabaseAccess.deleteitem 1 "BLUP" connection
+                                                          x <- DatabaseAccess.updateitem 40000 "CASH" 1 connection
+                                                          y <- (DatabaseAccess.insertitem "BLUP" 42 3.14 1 connection)
+                                                          z <- DatabaseAccess.deleteitem 1 "BLEP" connection
+                                                          let f = x `seq` 1
+                                                          let g = y  `seq` 1
+                                                          let h = z  `seq` 1
+                                                          println (f + g + h)
 
 {--
 runInTransaction connection = do 
