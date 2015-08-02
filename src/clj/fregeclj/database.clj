@@ -5,7 +5,6 @@
             [clojure.string :as cljstr :refer [blank?]]
             [yesql.core :refer [defquery]])
   ;(:import [fregeclj Fregeclj])
-  (:import [frege.control.monad.trans MonadIO])
   (:gen-class
     :name com.fregeclj.DatabaseAccess
     :methods [#^{:static true} [existingamount [long String Object] Long]
@@ -17,8 +16,6 @@
 
 ;(ann db-spec Map)
 (def db-spec (cf/load-config "resources/config.clj"))
-
-(log/debug (type MonadIO))
 
 ;(ann ^:no-check get-items-query [Map Integer -> List])
 (defquery get-items-query "sql/select.sql")

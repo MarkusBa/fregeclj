@@ -18,6 +18,11 @@ import frege.control.monad.trans.MonadIO
      lein fregec
      lein repl 
      (import ...)
+     
+     Even less steps
+     lein clean
+     lein compile
+     lein fregec :run fregeclj.Fregeclj
 --}
 
 data List e = native java.util.List where
@@ -91,7 +96,9 @@ maybeShow y = do
 --testExistingAmount :: Long -> String -> Maybe Long
 --testExistingAmount :: Long -> String -> IO (Maybe String)
 testExistingAmount :: Long -> String -> IO (String)
-testExistingAmount idplayer symbol = maybeShow $ DatabaseAccess.wrapintransaction $ DatabaseAccess.existingamount idplayer symbol
+testExistingAmount idplayer symbol = do
+                                                                   res <- maybeShow $ DatabaseAccess.wrapintransaction $ DatabaseAccess.existingamount idplayer symbol
+                                                                   return res
                                                
 main = do
                z <- testExistingAmount 1 "CASH"  
