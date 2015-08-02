@@ -80,6 +80,9 @@ data DatabaseAccess = native com.fregeclj.DatabaseAccess where
   pure native updateitem com.fregeclj.DatabaseAccess.updateitem ::  Long -> String -> Long -> Object -> String  --connection and BigInteger actually
   --insertitem [symbol amount price idplayer connection]
   pure native insertitem com.fregeclj.DatabaseAccess.insertitem ::  String -> Long -> Double -> Long -> Object -> String  --connection and BigInteger actually
+  --deleteitem [idplayer symbol connection]
+  pure native deleteitem com.fregeclj.DatabaseAccess.deleteitem ::  Long -> String -> Object -> String  --connection and BigInteger actually
+
 
 maybePrint :: Show a => Maybe a -> IO ()
 maybePrint y =  case y of 
@@ -106,7 +109,7 @@ runInTransaction connection = do
                                                           --println success                                                  
                                                           --let success2 = DatabaseAccess.insertitem "BLUP" 42 3.14 1 connection
                                                           --println success2
-                                                          println $ DatabaseAccess.updateitem 40000 "CASH" 1 connection ++ DatabaseAccess.insertitem "BLIP" 42 3.14 1 connection
+                                                          println $ DatabaseAccess.updateitem 40000 "CASH" 1 connection ++ (DatabaseAccess.insertitem "BLEP" 42 3.14 1 connection) ++ DatabaseAccess.deleteitem 1 "BLUP" connection
 
 {--
 runInTransaction connection = do 

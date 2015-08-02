@@ -10,7 +10,7 @@
     :methods [#^{:static true} [existingamount [long String Object] Long]
               #^{:static true} [updateitem [long String long Object] String] ;; java.math.BigInteger actually
               #^{:static true} [insertitem [String long double long Object] String]
-              #^{:static true} [deleteitem [long String Object] Integer]
+              #^{:static true} [deleteitem [long String Object] String]
               #^{:static true} [wrapintransaction [frege.runtime.Lambda] Object]
               #^{:static true} [getitems [long] clojure.lang.LazySeq]]))
 
@@ -38,21 +38,22 @@
 
 (defn -updateitem [amount symbol idplayer connection]
   (update-item! connection amount symbol idplayer)
-   "success")
+   (identity "success"))
 
 ;(ann ^:no-check insert-item! [Map String Double Double Integer java.sql.Timestamp -> Integer])
 (defquery insert-item! "sql/insertitem.sql")
 
 (defn -insertitem [symbol amount price idplayer connection]
-  (log/info (str "insertitem called with" symbol amount price idplayer))
+  (log/info (str "insertitem called with " symbol " " amount " " price " " idplayer))
   (insert-item! connection symbol amount price idplayer (java.sql.Timestamp. (System/currentTimeMillis)))
-  "success")
+  (identity "success"))
 
 ;(ann ^:no-check delete-item! [Map Integer String -> Integer])
 (defquery delete-item! "sql/deleteitem.sql")
 
 (defn -deleteitem [idplayer symbol connection]
-  (insert-item! connection idplayer symbol))
+  (delete-item! connection idplayer symbol)
+  (identity "success"))
 
 (defn -wrapintransaction [frege-lambda]
   (jdbc/with-db-transaction [connection db-spec]
