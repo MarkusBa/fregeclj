@@ -109,13 +109,22 @@ runInTransaction connection = do
                                                           --println success                                                  
                                                           --let success2 = DatabaseAccess.insertitem "BLUP" 42 3.14 1 connection
                                                           --println success2
-                                                          x <- DatabaseAccess.updateitem 40000 "CASH" 1 connection
+                                                          x <- DatabaseAccess.updateitem 50000 "CASH" 1 connection
                                                           y <- (DatabaseAccess.insertitem "BLUP" 42 3.14 1 connection)
                                                           z <- DatabaseAccess.deleteitem 1 "BLEP" connection
-                                                          let f = x `seq` 1
-                                                          let g = y  `seq` 1
-                                                          let h = z  `seq` 1
-                                                          println (f + g + h)
+                                                          println $! x ++ y ++ z
+                                                          --suc1 <- x
+                                                          --suc2 <- y
+                                                          --suc3 <- z
+                                                          --let suc = suc1 ++ suc2 ++ suc3
+                                                          --println suc
+                                                          --suc
+                                                          --let f = x `seq` 1
+                                                          --let g = y  `seq` 1
+                                                          --let h = z  `seq` 1
+                                                          --let i = f + g + h
+                                                          --println $! id i
+                                                          --return i
 
 {--
 runInTransaction connection = do 
@@ -132,7 +141,8 @@ runInTransaction connection = do
                                                                                                                                   
 main = do
                success <- DatabaseAccess.wrapintransaction $ runInTransaction
-               
+               w <- success
+               println w
                -- something needs to be done with the result or it is never evaluated if we declare it as a pure function!
                -- println success
                --asdf <- DatabaseAccess.wrapintransaction $ DatabaseAccess.insertitem "BLUP" 42 3.14 1
