@@ -70,6 +70,7 @@ data Keyword = native clojure.lang.Keyword
  --}     
  
  -- TODO Stop lying about the methods being pure
+ --           We currently have to lie because we are passing a lambda to clojure.  Since clojure doesn't know about laziness, the lambda isn't completely evaluated ??
                  
 data DatabaseAccess = native com.fregeclj.DatabaseAccess where
   pure native getitems com.fregeclj.DatabaseAccess.getitems :: Long -> List (PersistentMap Keyword Object)
@@ -77,11 +78,11 @@ data DatabaseAccess = native com.fregeclj.DatabaseAccess where
   -- existingamount [idplayer symbol connection]
   pure native existingamount com.fregeclj.DatabaseAccess.existingamount ::  Long -> String -> Object -> Maybe Long
   --updateitem [amount symbol idplayer connection]
-  native updateitem com.fregeclj.DatabaseAccess.updateitem ::  Long -> String -> Long -> Object -> IO (String)  --connection and BigInteger actually
+  pure native updateitem com.fregeclj.DatabaseAccess.updateitem ::  Long -> String -> Long -> Object -> String  --connection and BigInteger actually
   --insertitem [symbol amount price idplayer connection]
-  native insertitem com.fregeclj.DatabaseAccess.insertitem ::  String -> Long -> Double -> Long -> Object -> IO (String)  --connection and BigInteger actually
+  pure native insertitem com.fregeclj.DatabaseAccess.insertitem ::  String -> Long -> Double -> Long -> Object -> String  --connection and BigInteger actually
   --deleteitem [idplayer symbol connection]
-  native deleteitem com.fregeclj.DatabaseAccess.deleteitem ::  Long -> String -> Object -> IO (String)  --connection and BigInteger actually
+  pure native deleteitem com.fregeclj.DatabaseAccess.deleteitem ::  Long -> String -> Object -> String  --connection and BigInteger actually
 
 
 maybePrint :: Show a => Maybe a -> IO ()
@@ -109,22 +110,7 @@ runInTransaction connection = do
                                                           --println success                                                  
                                                           --let success2 = DatabaseAccess.insertitem "BLUP" 42 3.14 1 connection
                                                           --println success2
-                                                          x <- DatabaseAccess.updateitem 50000 "CASH" 1 connection
-                                                          y <- (DatabaseAccess.insertitem "BLUP" 42 3.14 1 connection)
-                                                          z <- DatabaseAccess.deleteitem 1 "BLEP" connection
-                                                          println $! x ++ y ++ z
-                                                          --suc1 <- x
-                                                          --suc2 <- y
-                                                          --suc3 <- z
-                                                          --let suc = suc1 ++ suc2 ++ suc3
-                                                          --println suc
-                                                          --suc
-                                                          --let f = x `seq` 1
-                                                          --let g = y  `seq` 1
-                                                          --let h = z  `seq` 1
-                                                          --let i = f + g + h
-                                                          --println $! id i
-                                                          --return i
+                                                          println $ DatabaseAccess.updateitem 40000 "CASH" 1 connection ++ (DatabaseAccess.insertitem "BLEP" 42 3.14 1 connection) ++ DatabaseAccess.deleteitem 1 "BLUP" connection
 
 {--
 runInTransaction connection = do 
@@ -141,8 +127,7 @@ runInTransaction connection = do
                                                                                                                                   
 main = do
                success <- DatabaseAccess.wrapintransaction $ runInTransaction
-               w <- success
-               println w
+               
                -- something needs to be done with the result or it is never evaluated if we declare it as a pure function!
                -- println success
                --asdf <- DatabaseAccess.wrapintransaction $ DatabaseAccess.insertitem "BLUP" 42 3.14 1
