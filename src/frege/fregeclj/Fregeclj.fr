@@ -75,6 +75,7 @@ data DatabaseAccess = native com.fregeclj.DatabaseAccess where
   pure native getitems com.fregeclj.DatabaseAccess.getitems :: Long -> List (PersistentMap Keyword Object)
   native wrapintransaction com.fregeclj.DatabaseAccess.wrapintransaction :: (Object -> a) -> IO (a)
   pure native existingamount com.fregeclj.DatabaseAccess.existingamount ::  Long -> String -> Object -> Maybe Long
+  native updateitem com.fregeclj.DatabaseAccess.updateitem ::  Long -> String -> Long -> Object -> IO ()  --connection and BigInteger actually
   {-- pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> List (PersistentMap Keyword Object) 
    pure native getitems com.fregeclj.DatabaseAccess.getitems :: Int -> [PersistentMap Keyword Object]
    pure native testkeyword com.fregeclj.DatabaseAccess.testkeyword :: Int -> Keyword
@@ -99,8 +100,13 @@ testExistingAmount :: Long -> String -> IO (String)
 testExistingAmount idplayer symbol = do
                                                                    res <- maybeShow $ DatabaseAccess.wrapintransaction $ DatabaseAccess.existingamount idplayer symbol
                                                                    return res
-                                               
+
+                                                                                              
 main = do
+               success <- DatabaseAccess.wrapintransaction $ DatabaseAccess.updateitem 10000 "CASH" 1
+               -- something needs to be done with the result or it is never evaluated if we declare it as a pure function!
+               -- println success
                z <- testExistingAmount 1 "CASH"  
                println z
+               
                               

@@ -8,7 +8,7 @@
   (:gen-class
     :name com.fregeclj.DatabaseAccess
     :methods [#^{:static true} [existingamount [long String Object] Long]
-              #^{:static true} [updateitem [long String long Object] Integer]
+              #^{:static true} [updateitem [long String long Object] void] ;; java.math.BigInteger?
               #^{:static true} [insertitem [String long double long java.sql.Timestamp Object] Integer]
               #^{:static true} [deleteitem [long String Object] Integer]
               #^{:static true} [wrapintransaction [frege.runtime.Lambda] Object]
