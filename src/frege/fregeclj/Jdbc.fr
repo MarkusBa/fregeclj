@@ -36,6 +36,8 @@ data ResultSet = native java.sql.ResultSet where
 
   native close :: Mutable s ResultSet -> ST s () throws SQLException
 
+  native next :: Mutable s ResultSet -> ST s Bool throws SQLException   
+
   native getString :: Mutable s ResultSet -> String -> ST s String throws SQLException
                     | Mutable s ResultSet -> Int -> ST s String throws SQLException
 
@@ -70,4 +72,10 @@ data DriverManager = native java.sql.DriverManager where
 
 main = do
                conn <- DriverManager.getConnection "jdbc:postgresql://127.0.0.1:5432/stockHaskell" "markus" "1234"
-               println "success"
+               statement <- Connection.createStatement conn
+               resultSet <- Statement.executeQuery statement "select symbol from item"
+               ResultSet.next resultSet
+               str1 <- ResultSet.getString resultSet "symbol"
+               println str1
+               Statement.close statement
+               Connection.close conn
