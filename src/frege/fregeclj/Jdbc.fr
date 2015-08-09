@@ -32,6 +32,21 @@ data SQLException = pure native java.sql.SQLException where
 
 derive Exceptional SQLException
 
+data ResultSet = native java.sql.ResultSet where
+
+  native close :: Mutable s ResultSet -> ST s () throws SQLException
+
+  native getString :: Mutable s ResultSet -> String -> ST s String throws SQLException
+                    | Mutable s ResultSet -> Int -> ST s String throws SQLException
+
+
+data Statement = native java.sql.Statement where
+
+  native executeQuery :: Mutable s Statement -> String -> STMutable s ResultSet throws SQLException
+
+  native close :: Mutable s Statement -> ST s () throws SQLException
+
+
 data Connection = native java.sql.Connection where
 
   pure native transaction_none "java.sql.Connection.TRANSACTION_NONE" :: Int
@@ -41,6 +56,10 @@ data Connection = native java.sql.Connection where
   pure native transaction_serializable "java.sql.Connection.TRANSACTION_SERIALIZABLE" :: Int
 
   native close :: Mutable s Connection -> ST s () throws SQLException
+
+  native createStatement :: Mutable s Connection -> STMutable s Statement throws SQLException
+                          | Mutable s Connection -> Int -> Int -> STMutable s Statement throws SQLException
+                          | Mutable s Connection -> Int -> Int -> Int -> STMutable s Statement throws SQLException
 
 
 data DriverManager = native java.sql.DriverManager where
