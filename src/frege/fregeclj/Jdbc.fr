@@ -1,0 +1,54 @@
+module fregeclj.Jdbc where
+
+{--
+    Run: 
+      lein fregec :run fregeclj.JDBC    
+--}
+
+--data Connection = native java.sql.Connection
+
+data Properties = native java.util.Properties where
+
+  native new :: () -> STMutable s Properties
+              | Mutable s Properties -> STMutable s Properties
+
+
+data SQLException = pure native java.sql.SQLException where
+
+  pure native new :: String -> String -> Int -> Throwable -> SQLException
+                   | String -> String -> Throwable -> SQLException
+                   | String -> String -> Int -> SQLException
+                   | String -> String -> SQLException
+                   | String -> SQLException
+                   | String -> Throwable -> SQLException
+                   | Throwable -> SQLException
+                   | () -> SQLException
+
+  pure native getErrorCode :: SQLException -> Int
+
+  pure native getNextException :: SQLException -> SQLException
+
+  pure native getSQLState :: SQLException -> String
+
+derive Exceptional SQLException
+
+data Connection = native java.sql.Connection where
+
+  pure native transaction_none "java.sql.Connection.TRANSACTION_NONE" :: Int
+  pure native transaction_read_uncommitted "java.sql.Connection.TRANSACTION_READ_UNCOMMITTED" :: Int
+  pure native transaction_read_committed "java.sql.Connection.TRANSACTION_READ_COMMITTED" :: Int
+  pure native transaction_repeatable_read "java.sql.Connection.TRANSACTION_REPEATABLE_READ" :: Int
+  pure native transaction_serializable "java.sql.Connection.TRANSACTION_SERIALIZABLE" :: Int
+
+  native close :: Mutable s Connection -> ST s () throws SQLException
+
+
+data DriverManager = native java.sql.DriverManager where
+
+  native getConnection "java.sql.DriverManager.getConnection" :: String -> String -> String -> STMutable s Connection throws SQLException
+                                                               | String -> Mutable s Properties -> STMutable s Connection throws SQLException
+                                                               | String -> STMutable s Connection throws SQLException
+
+main = do
+               conn <- DriverManager.getConnection "jdbc:postgresql://127.0.0.1:5432/stockHaskell" "markus" "1234"
+               println "success"
