@@ -1,34 +1,15 @@
 module JDBC where
 
-data Properties = native java.util.Properties where
+{--
+    Run: 
+      lein fregec :run fregeclj.JDBC    
+--}
 
-  native new :: () -> STMutable s Properties
-              | Mutable s Properties -> STMutable s Properties
+--data Connection = native java.sql.Connection
 
-  native getProperty :: Mutable s Properties -> String -> String -> ST s String
-                      | Mutable s Properties -> String -> ST s String
+data DriverManager = native java.sql.DriverManager where 
+  native  getConnection java.sql.DriverManager :: String -> String -> String -> IO (Object)
 
-  native list :: MutableIO Properties -> MutableIO PrintWriter -> IO ()
-               | MutableIO Properties -> MutableIO PrintStream -> IO ()
-
-  native load :: MutableIO Properties -> MutableIO Reader -> IO () throws IOException
-               | MutableIO Properties -> MutableIO InputStream -> IO () throws IOException
-
-  native loadFromXML :: MutableIO Properties -> MutableIO InputStream -> IO () throws IOException, InvalidPropertiesFormatException
-
-  native propertyNames :: Mutable s Properties -> STMutable s (Enumeration Object)
-
-  native save :: MutableIO Properties -> MutableIO OutputStream -> String -> IO ()
-
-  native setProperty :: Mutable s Properties -> String -> String -> ST s Object
-
-  native store :: MutableIO Properties -> MutableIO OutputStream -> String -> IO () throws IOException
-                | MutableIO Properties -> MutableIO Writer -> String -> IO () throws IOException
-
-  native storeToXML :: MutableIO Properties -> MutableIO OutputStream -> String -> IO () throws IOException
-                     | MutableIO Properties -> MutableIO OutputStream -> String -> String -> IO () throws IOException
-
-  native stringPropertyNames :: Mutable s Properties -> STMutable s (Set String)
-
-derive Serializable Properties
-
+main = do
+               conn <- DriverManager.getConnection "jdbc:postgresql://127.0.0.1:5432/stockHaskell" "markus" "1234"
+               println "success"
