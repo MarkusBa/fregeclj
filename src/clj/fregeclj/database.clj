@@ -17,6 +17,12 @@
 ;(ann db-spec Map)
 (def db-spec (cf/load-config "resources/config.clj"))
 
+(defn jdbcCrap [] 
+  (let [connection  (java.sql.DriverManager/getConnection 
+					"jdbc:postgresql://127.0.0.1:5432/stockHaskell" "markus",
+					"1234")]
+              ))
+
 ;(ann ^:no-check get-items-query [Map Integer -> List])
 (defquery get-items-query "sql/select.sql")
 
